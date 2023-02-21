@@ -21,6 +21,7 @@ pub struct BigStruct {
 /// The type of the collection to collect the `(Key, BigStruct)` pairs into in `fill_map_iter` & `fill_map`.
 /// Try to set it to `Vec<(Key, BigStruct)>`, yields different results.
 type CollectionType = HashMap<Key, BigStruct>;
+// type CollectionType = Vec<(Key, BigStruct)>;
 
 /// Returns an iterator of random `(Key, BigStruct)` pairs.
 pub fn generate_random_pairs(amount: u32) -> impl Iterator<Item = (Key, BigStruct)> {
@@ -28,9 +29,7 @@ pub fn generate_random_pairs(amount: u32) -> impl Iterator<Item = (Key, BigStruc
     let dum: DummyData = (&mut rng)
         .sample_iter(Alphanumeric)
         .take(DUMMY_DATA_COUNT)
-        .collect::<Vec<u8>>()
-        .try_into()
-        .unwrap();
+        .collect::<Vec<u8>>();
     (0..amount).map(move |_| {
         (
             rng.gen(), // A random key.
