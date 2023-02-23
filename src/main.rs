@@ -1,3 +1,10 @@
+#[cfg(feature = "jemallocator")]
+use jemallocator::Jemalloc;
+
+#[cfg(feature = "jemallocator")]
+#[global_allocator]
+static GLOBAL: Jemalloc = Jemalloc;
+
 use mem_hog::*;
 
 /// Gets the input from stdin.
@@ -35,6 +42,7 @@ fn main() {
     let mut accumulator = HashMap::new();
     let mut accumulator_size = 0;
     let mut amount = 5_000_000;
+    // let mut amount = 500_000;
     loop {
         print!("Accumulator Size = {accumulator_size}");
         print_commands();
@@ -69,7 +77,11 @@ fn main() {
                 Ok(x) => amount = x,
                 Err(e) => eprintln!("{e}"),
             },
-            Ok(0) => return,
+            Ok(0) => {
+                // don't drop anything
+                std::process::exit(0);
+                // return
+            }
             Ok(x) => eprintln!("Invalid input: {x}"),
             Err(e) => eprintln!("{e}"),
         }

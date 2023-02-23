@@ -30,6 +30,9 @@ pub fn generate_random_pairs(amount: u32) -> impl Iterator<Item = (Key, BigStruc
         .sample_iter(Alphanumeric)
         .take(DUMMY_DATA_COUNT)
         .collect::<Vec<u8>>();
+
+    dbg!((0..amount).size_hint());
+
     (0..amount).map(move |_| {
         (
             rng.gen(), // A random key.
@@ -45,8 +48,8 @@ pub fn generate_random_pairs(amount: u32) -> impl Iterator<Item = (Key, BigStruc
 /// Just loops over an iterator of random data without collecting this iterator in-memory.
 pub fn fill_map_light(inverse_map: &mut HashMap<Value, HashSet<Key>>, amount: u32) {
     let iter = generate_random_pairs(amount);
-    for (key, val) in iter {
-        let (key, val) = (key, val.uuid);
+    for (key, val_s) in iter {
+        let (key, val) = (key, val_s.uuid);
         if let Some(set) = inverse_map.get_mut(&val) {
             set.insert(key);
         } else {
@@ -60,8 +63,8 @@ pub fn fill_map_light(inverse_map: &mut HashMap<Value, HashSet<Key>>, amount: u3
 /// This takes the most memory but is trimmable to the same size as `fill_map_light`.
 pub fn fill_map_iter(inverse_map: &mut HashMap<Value, HashSet<Key>>, amount: u32) {
     let map: CollectionType = generate_random_pairs(amount).collect();
-    for (key, val) in map.iter() {
-        let (key, val) = (*key, val.uuid);
+    for (key, val_s) in map.iter() {
+        let (key, val) = (*key, val_s.uuid);
         if let Some(set) = inverse_map.get_mut(&val) {
             set.insert(key);
         } else {
@@ -77,12 +80,16 @@ pub fn fill_map_iter(inverse_map: &mut HashMap<Value, HashSet<Key>>, amount: u32
 /// isn't freed until the inverse map is freed, which can be a big problem if the inverse map is long-lived.
 pub fn fill_map(inverse_map: &mut HashMap<Value, HashSet<Key>>, amount: u32) {
     let map: CollectionType = generate_random_pairs(amount).collect();
-    for (key, val) in map {
-        let (key, val) = (key, val.uuid);
+    // let mut bin = vec![];
+
+    for (key, val_s) in map {
+        let (key, val) = (key, val_s.uuid);
         if let Some(set) = inverse_map.get_mut(&val) {
             set.insert(key);
         } else {
             inverse_map.insert(val, HashSet::from_iter(vec![key]));
         }
+
+        // bin.push(val_s);
     }
 }
