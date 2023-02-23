@@ -12,7 +12,7 @@ pub fn get_input() -> Result<u32, String> {
     let mut buf = String::new();
     match std::io::stdin().read_line(&mut buf) {
         Ok(_) => {}
-        Err(e) => eprintln!("Error reading the input: {e}"),
+        Err(e) => panic!("Error reading the input: {e}"),
     }
     buf.trim()
         .parse()
