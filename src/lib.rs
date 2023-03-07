@@ -31,8 +31,6 @@ pub fn generate_random_pairs(amount: u32) -> impl Iterator<Item = (Key, BigStruc
         .take(DUMMY_DATA_COUNT)
         .collect::<Vec<u8>>();
 
-    dbg!((0..amount).size_hint());
-
     (0..amount).map(move |_| {
         (
             rng.gen(), // A random key.
