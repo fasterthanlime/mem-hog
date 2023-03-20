@@ -41,9 +41,11 @@ Choice: "
 fn main() {
     let mut accumulator = HashMap::new();
     let mut accumulator_size = 0;
-    let mut amount = 5_000_000;
+    // let mut amount = 5_000_000;
     // let mut amount = 1_000_000;
+    let mut amount = 500_000;
     // let mut amount = 200_000;
+    // let mut amount = 100_000;
     // let mut amount = 50_000;
     loop {
         print!("Accumulator Size = {accumulator_size}");
